@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tmrCountdown = new System.Windows.Forms.Timer(this.components);
-            this.lblCountdown = new System.Windows.Forms.Label();
             this.niMain = new System.Windows.Forms.NotifyIcon(this.components);
             this.cmsMain = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tbxStatus = new System.Windows.Forms.ToolStripTextBox();
@@ -50,17 +49,6 @@
             this.tmrCountdown.Interval = 1000;
             this.tmrCountdown.Tick += new System.EventHandler(this.tmrCountdown_Tick);
             // 
-            // lblCountdown
-            // 
-            this.lblCountdown.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCountdown.Font = new System.Drawing.Font("Monotype Corsiva", 48F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCountdown.Location = new System.Drawing.Point(0, 0);
-            this.lblCountdown.Name = "lblCountdown";
-            this.lblCountdown.Size = new System.Drawing.Size(804, 366);
-            this.lblCountdown.TabIndex = 0;
-            this.lblCountdown.Text = "Countdown Timer";
-            this.lblCountdown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // niMain
             // 
             this.niMain.ContextMenuStrip = this.cmsMain;
@@ -78,13 +66,14 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.cmsMain.Name = "cmsMain";
-            this.cmsMain.Size = new System.Drawing.Size(161, 105);
+            this.cmsMain.Size = new System.Drawing.Size(161, 107);
             // 
             // tbxStatus
             // 
             this.tbxStatus.Enabled = false;
+            this.tbxStatus.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tbxStatus.Name = "tbxStatus";
-            this.tbxStatus.Size = new System.Drawing.Size(100, 21);
+            this.tbxStatus.Size = new System.Drawing.Size(100, 23);
             // 
             // toolStripSeparator2
             // 
@@ -132,22 +121,20 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(804, 366);
-            this.Controls.Add(this.lblCountdown);
             this.DoubleBuffered = true;
             this.Name = "MainForm";
+            this.Opacity = 0D;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.cmsMain.ResumeLayout(false);
             this.cmsMain.PerformLayout();
             this.ResumeLayout(false);
 
-            Microsoft.Win32.SystemEvents.SessionSwitch += new Microsoft.Win32.SessionSwitchEventHandler(SessionSwitchHandler);
         }
 
         #endregion
 
         private System.Windows.Forms.Timer tmrCountdown;
-        private System.Windows.Forms.Label lblCountdown;
         private System.Windows.Forms.NotifyIcon niMain;
         private System.Windows.Forms.ContextMenuStrip cmsMain;
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;

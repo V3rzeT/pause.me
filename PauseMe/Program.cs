@@ -12,7 +12,7 @@ namespace PauseMe
         [STAThread]
         static void Main()
         {
-            var settings = new Settings(new TimeSpan(0, 20, 0), new TimeSpan(0, 0, 20));
+            var settings = new Settings(new TimeSpan(0, 0, 5), new TimeSpan(0, 0, 20), true , true);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

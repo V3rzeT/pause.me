@@ -13,6 +13,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PauseMe
@@ -23,7 +25,6 @@ namespace PauseMe
         private DateTime _TimerStarted;
         List<OverlayForm> _OpenForms = new List<OverlayForm>();
         private Settings _settings;
-        private readonly Action<int> _updateCountdownLabel;
 
         public MainForm(Settings settings)
         {
@@ -38,16 +39,11 @@ namespace PauseMe
             this.WindowState = FormWindowState.Maximized;
             this.tmrMain.Interval = (int)_settings.PauseEvery.TotalMilliseconds;
 
-            lblCountdown.Text = "";
             tbxStatus.Text = "Stopped";
-
-            _updateCountdownLabel = (timer) => lblCountdown.Text = "Pause time: " + (new TimeSpan(0, 0, ((int)_settings.PauseTime.TotalSeconds) - timer)).ToShortString();
         }
 
         private void tmrCountdown_Tick(object sender, EventArgs e)
         {
-            _updateCountdownLabel(_CountDownTimer++);
-
             if (_CountDownTimer > _settings.PauseTime.TotalSeconds)
             {
                 _CountDownTimer = 0;
@@ -63,11 +59,19 @@ namespace PauseMe
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Disable start button and enable pause button
+            cmsMain.Items[2].Enabled = false;
+            cmsMain.Items[3].Enabled = true;
+
             frm_Restart();
         }
 
         private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Disable pause button and enable start button
+            cmsMain.Items[3].Enabled = false;
+            cmsMain.Items[2].Enabled = true;
+
             tmrMain.Stop();
             tmrUpdateStatus.Stop();
             tbxStatus.Text = "Stopped";
@@ -90,6 +94,18 @@ namespace PauseMe
             tmrMain.Stop();
             tmrUpdateStatus.Stop();
 
+            // Playing countdown start sound
+            if (_settings.soundStart == true)
+            {
+                Task.Run(() =>
+                    {
+                        Utilities.BeepThread(1000, 50, 5, 20);
+                        Thread.Sleep(900);
+                        Utilities.BeepThread(1000, 50, 5, 20);
+                    }
+                );
+            }
+
             foreach (var screen in Screen.AllScreens)
             {
                 var frm = new OverlayForm(_settings);
@@ -97,6 +113,7 @@ namespace PauseMe
                 frm.FormClosed += frm_FormClosed;
                 frm.Left = screen.Bounds.Left;
                 frm.Top = screen.Bounds.Top;
+                frm.Size = new Size(screen.Bounds.Width, screen.Bounds.Height / 14);
                 frm.StartPosition = FormStartPosition.Manual;
 
                 frm.Show(); 

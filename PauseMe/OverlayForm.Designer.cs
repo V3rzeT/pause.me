@@ -35,8 +35,9 @@
             // 
             // lblCountdown
             // 
+            this.lblCountdown.BackColor = System.Drawing.Color.Red;
             this.lblCountdown.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCountdown.Font = new System.Drawing.Font("Monotype Corsiva", 48F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCountdown.Font = new System.Drawing.Font("Segoe UI", 24F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lblCountdown.Location = new System.Drawing.Point(0, 0);
             this.lblCountdown.Name = "lblCountdown";
             this.lblCountdown.Size = new System.Drawing.Size(796, 327);
@@ -56,6 +57,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(796, 327);
             this.Controls.Add(this.lblCountdown);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "OverlayForm";
             this.Text = "OverlayForm";
             this.ResumeLayout(false);
