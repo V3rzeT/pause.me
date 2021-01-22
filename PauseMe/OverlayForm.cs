@@ -26,6 +26,7 @@ namespace PauseMe
         private int _CountDownTimer = 0;
         private readonly Action<int> _updateCountdownLabel;
         private Settings _settings;
+        private KeyboardHook _kbHook = new KeyboardHook();
 
         public OverlayForm(Settings settings)
         {
@@ -42,6 +43,9 @@ namespace PauseMe
             // Making form a click-through overlay
             int initialStyle = GetWindowLong(this.Handle, -20);
             SetWindowLong(this.Handle, -20, initialStyle | 0x80000 | 0x20);
+
+            // Subscribe to keyboard events
+            _kbHook.KeyDown += KeyboardKeyPress;
 
             _updateCountdownLabel = (timer) => lblCountdown.Text = "Pause time: " + (new TimeSpan(0, 0, ((int)_settings.PauseTime.TotalSeconds) - timer)).ToShortString();
             _updateCountdownLabel(_CountDownTimer++);
@@ -67,9 +71,12 @@ namespace PauseMe
             }
         }
 
-        private void lblCountdown_Click(object sender, EventArgs e)
+        private void KeyboardKeyPress(Keys pressedKey)
         {
-            this.Close();
+            if (pressedKey.ToString() == _settings.SkipKey.ToString())
+            {
+                this.Close();
+            }
         }
     }
 }
