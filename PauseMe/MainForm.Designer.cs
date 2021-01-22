@@ -130,6 +130,7 @@
             this.cmsMain.PerformLayout();
             this.ResumeLayout(false);
 
+            Microsoft.Win32.SystemEvents.SessionSwitch += new Microsoft.Win32.SessionSwitchEventHandler(SessionSwitchHandler);
         }
 
         #endregion
