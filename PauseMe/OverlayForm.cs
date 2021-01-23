@@ -67,6 +67,7 @@ namespace PauseMe
 
                 _CountDownTimer = 0;
                 tmrCountdown.Stop();
+                _kbHook.Finalize();
                 this.Close();
             }
         }
@@ -75,6 +76,7 @@ namespace PauseMe
         {
             if (pressedKey.ToString() == _settings.SkipKey.ToString())
             {
+                _kbHook.Finalize();
                 this.Close();
             }
         }

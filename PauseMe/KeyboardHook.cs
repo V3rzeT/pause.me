@@ -11,10 +11,10 @@ namespace PauseMe
 		private static extern IntPtr SetWindowsHookEx(int idHook, KeyboardHook.KBDLLHookProc HookProc, IntPtr hInstance, int wParam);
 
 		[DllImport("User32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto)]
-		private static extern int CallNextHookEx(int idHook, int nCode, IntPtr wParam, IntPtr lParam);
+		private static extern int CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam);
 
         [DllImport("User32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto)]
-		private static extern bool UnhookWindowsHookEx(int idHook);
+		private static extern bool UnhookWindowsHookEx(IntPtr idHook);
 
 		public event KeyDownEventHandler KeyDown;
 
@@ -53,14 +53,15 @@ namespace PauseMe
 						}
 					}
 				}
-				return KeyboardHook.CallNextHookEx((int)IntPtr.Zero, nCode, wParam, lParam);
+				return KeyboardHook.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
 			}
 		}
 
 		public KeyboardHook()
 		{
-			this.KBDLLHookProcDelegate = new KeyboardHook.KBDLLHookProc(this.KeyboardProc);
-			this.HHookID = IntPtr.Zero;
+			this.KBDLLHookProcDelegate = new KBDLLHookProc(this.KeyboardProc);
+
+            this.HHookID = IntPtr.Zero;
 			this.HHookID = SetWindowsHookEx(WH_KEYBOARD_LL, KBDLLHookProcDelegate, Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
 			bool flag = this.HHookID == IntPtr.Zero;
 			if (flag)
@@ -69,15 +70,15 @@ namespace PauseMe
 			}
 		}
 
-		protected void Finalize()
+		public void Finalize()
 		{
 			bool flag = !(this.HHookID == IntPtr.Zero);
 			if (flag)
 			{
-				KeyboardHook.UnhookWindowsHookEx((int)this.HHookID);
+				KeyboardHook.UnhookWindowsHookEx(this.HHookID);
 			}
 			//base.Finalize();
-		}
+        }
 
 		private const int WH_KEYBOARD_LL = 13;
 
