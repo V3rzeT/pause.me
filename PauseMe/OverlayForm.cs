@@ -26,13 +26,14 @@ namespace PauseMe
         private int _CountDownTimer = 0;
         private readonly Action<int> _updateCountdownLabel;
         private Settings _settings;
-        private KeyboardHook _kbHook = new KeyboardHook();
+        private KeyboardHook _kbHook;
 
         public OverlayForm(Settings settings)
         {
             InitializeComponent();
 
             _settings = settings;
+            _kbHook = new KeyboardHook(new Keys[] { _settings.SkipKey });
 
             this.TopMost = true;
             this.ShowInTaskbar = false;
@@ -45,7 +46,7 @@ namespace PauseMe
             SetWindowLong(this.Handle, -20, initialStyle | 0x80000 | 0x20);
 
             // Subscribe to keyboard events
-            _kbHook.KeyDown += KeyboardKeyPress;
+            _kbHook.KeyboardPressed += KeyboardKeyPress;
 
             _updateCountdownLabel = (timer) => lblCountdown.Text = "Pause time: " + (new TimeSpan(0, 0, ((int)_settings.PauseTime.TotalSeconds) - timer)).ToShortString();
             _updateCountdownLabel(_CountDownTimer++);
@@ -67,16 +68,16 @@ namespace PauseMe
 
                 _CountDownTimer = 0;
                 tmrCountdown.Stop();
-                _kbHook.Finalize();
+                _kbHook.Dispose();
                 this.Close();
             }
         }
 
-        private void KeyboardKeyPress(Keys pressedKey)
+        private void KeyboardKeyPress(object sender, KeyboardHookEventArgs e)
         {
-            if (pressedKey.ToString() == _settings.SkipKey.ToString())
+            if (e.KeyboardData.Key.ToString() == _settings.SkipKey.ToString())
             {
-                _kbHook.Finalize();
+                _kbHook.Dispose();
                 this.Close();
             }
         }
